@@ -22,15 +22,20 @@ DEBUG = -O0 -g
 CFLAGS += $(DEBUG)
 UNITY_SUPPORT_64 = -D UNITY_SUPPORT_64
 UNITY_INCLUDE_DOUBLE = -D UNITY_INCLUDE_DOUBLE
-DEFINES =  -D UNITY_OUTPUT_CHAR=putcharSpy
-DEFINES += -D UNITY_OUTPUT_CHAR_HEADER_DECLARATION=putcharSpy\(int\)
-DEFINES += -D UNITY_OUTPUT_FLUSH=flushSpy
-DEFINES += -D UNITY_OUTPUT_FLUSH_HEADER_DECLARATION=flushSpy\(void\)
+
+#DEFINES =  -D UNITY_OUTPUT_CHAR=putcharSpy
+#DEFINES += -D UNITY_OUTPUT_CHAR_HEADER_DECLARATION=putcharSpy\(int\)
+#DEFINES += -D UNITY_OUTPUT_FLUSH=flushSpy
+#DEFINES += -D UNITY_OUTPUT_FLUSH_HEADER_DECLARATION=flushSpy\(void\)
+
+
+DEFINES += -D UNITY_USE_FLUSH_STDOUT
+
 DEFINES += $(UNITY_SUPPORT_64) $(UNITY_INCLUDE_DOUBLE)
 #SRC1 = ../src/unity.c tests/test_unity_arrays.c build/test_unity_arraysRunner.c
 SRC2 = ../src/unity.c tests/test_unity_core.c build/test_unity_coreRunner.c
 #SRC3 = ../src/unity.c tests/test_unity_doubles.c build/test_unity_doublesRunner.c
-#SRC4 = ../src/unity.c tests/test_unity_floats.c build/test_unity_floatsRunner.c
+SRC4 = ../src/unity.c tests/test_unity_floats.c build/test_unity_floatsRunner.c
 #SRC5 = ../src/unity.c tests/test_unity_integers.c build/test_unity_integersRunner.c
 #SRC6 = ../src/unity.c tests/test_unity_integers_64.c build/test_unity_integers_64Runner.c
 #SRC7 = ../src/unity.c tests/test_unity_memory.c build/test_unity_memoryRunner.c
@@ -41,21 +46,41 @@ BUILD_DIR = build
 #TARGET = build/testunity-cov.exe
 TARGET = build/my_testunity.exe
 
+
+
+TARGET_ARRAYS      = test_unity_arrays.exe
+TARGET_CORE        = test_unity_core.exe
+TARGET_DOUBLES     = test_unity_doubles.exe
+TARGET_FLOATS      = test_unity_floats.exe
+TARGET_INTEGERS    = test_unity_integers.exe
+TARGET_INTEGERS_64 = test_unity_integers_64.exe
+TARGET_MEMORY      = test_unity_memory.exe
+TARGET_STRINGS     = test_unity_strings.exe
+
 # To generate coverage, call 'make -s', the default target runs.
 # For verbose output of all the tests, run 'make test'.
 default: test
 .PHONY: default test clean
 
+test_unity_core: $(SRC2)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC2) -o $(BUILD_DIR)/$(TARGET_CORE)
+
+test_unity_floats: $(SRC4)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC4) -o $(BUILD_DIR)/$(TARGET_FLOATS)
+
 #test: $(SRC1) $(SRC2) $(SRC3) $(SRC4) $(SRC5) $(SRC6) $(SRC7) $(SRC8)
-test: $(SRC2)
+test: $(SRC2) $(SRC4)
 	@echo [Target test]
 #	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC1) -o $(TARGET)
 #	./$(TARGET)
-	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC2) -o $(TARGET)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC2) -o $(TARGET_CORE)
 #	./$(TARGET)
 #	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC3) -o $(TARGET)
 #	./$(TARGET)
-#	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC4) -o $(TARGET)
+
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC4) -o $(TARGET_FLOATS)
+	
+	
 #	./$(TARGET)
 #	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC5) -o $(TARGET)
 #	./$(TARGET)
@@ -83,8 +108,8 @@ $(BUILD_DIR)/test_unity_coreRunner.c: tests/test_unity_core.c | $(BUILD_DIR)
 #$(BUILD_DIR)/test_unity_doublesRunner.c: tests/test_unity_doubles.c | $(BUILD_DIR)
 #	awk $(AWK_SCRIPT) tests/test_unity_doubles.c > $@
 #
-#$(BUILD_DIR)/test_unity_floatsRunner.c: tests/test_unity_floats.c | $(BUILD_DIR)
-#	awk $(AWK_SCRIPT) tests/test_unity_floats.c > $@
+$(BUILD_DIR)/test_unity_floatsRunner.c: tests/test_unity_floats.c | $(BUILD_DIR)
+	awk $(AWK_SCRIPT) tests/test_unity_floats.c > $@
 #
 #$(BUILD_DIR)/test_unity_integersRunner.c: tests/test_unity_integers.c | $(BUILD_DIR)
 #	awk $(AWK_SCRIPT) tests/test_unity_integers.c > $@
@@ -115,4 +140,14 @@ $(BUILD_DIR):
 
 clean:
 	pwd
-	rm -f $(TARGET) $(BUILD_DIR)/*.gc* $(BUILD_DIR)/test_unity_*Runner.c
+	rm -f $(BUILD_DIR)/*.exe $(BUILD_DIR)/*.gc* $(BUILD_DIR)/test_unity_*Runner.c
+	
+.Phony: my_sub
+
+my_sub:
+	echo $(SRC4)
+	echo "1:" $(word 1, $(SRC4))
+	echo "2:" $(word 2, $(SRC4))
+	echo "THIS_TEST_EXE:" $(subst tests/,,$(word 2, $(SRC4)))
+	echo $(patsubst %.c, %.exe, $(subst tests/,,$(word 2, $(SRC4))))  
+	

@@ -8,6 +8,8 @@
 #define TEST_INSTANCES
 #include "self_assessment_utils.h"
 
+#include <stdbool.h>
+
 static int SetToOneToFailInTearDown;
 static int SetToOneMeanWeAlreadyCheckedThisGuy;
 
@@ -154,7 +156,8 @@ void testPreviousPass(void)
 void testNotVanilla(void)
 {
     EXPECT_ABORT_BEGIN
-    TEST_ASSERT(0);
+    //TEST_ASSERT(0);
+	TEST_ASSERT( false == true);
     VERIFY_FAILS_END
 }
 

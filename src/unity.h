@@ -343,6 +343,7 @@ void verifyTest(void);
 
 #define TEST_ASSERT_ALMOST_EQUAL_FLOAT(expected, actual, decimals) 								   UNITY_TEST_ASSERT_ALMOST_EQUAL_FLOAT((expected), (actual), (decimals), __LINE__, NULL )
 
+#define TEST_ASSERT_ALMOST_EQUAL_FLOAT_2(expected, actual, decimals)                               UNITY_TEST_ASSERT_ALMOST_EQUAL_FLOAT_2((expected), (actual), (decimals), __LINE__, NULL )
 
 #define TEST_ASSERT_EQUAL_FLOAT_ARRAY(expected, actual, num_elements)                              UNITY_TEST_ASSERT_EQUAL_FLOAT_ARRAY((expected), (actual), (num_elements), __LINE__, NULL)
 #define TEST_ASSERT_EACH_EQUAL_FLOAT(expected, actual, num_elements)                               UNITY_TEST_ASSERT_EACH_EQUAL_FLOAT((expected), (actual), (num_elements), __LINE__, NULL)

@@ -1056,6 +1056,30 @@ void UnityAssertAlmostEqualFloats(const UNITY_FLOAT expected,
     }
 }
 
+void UnityAssertAlmostEqualFloats_2(const UNITY_FLOAT expected,
+                                   const UNITY_FLOAT actual,
+                                   const UNITY_FLOAT decimal_places,
+                                   const char* msg,
+                                   const UNITY_LINE_TYPE lineNumber)
+{
+    RETURN_IF_FAIL_OR_IGNORE;
+
+    UNITY_FLOAT diff;
+    UNITY_FLOAT diff_trunc;
+
+    diff = expected - actual;
+
+    diff_trunc = trunc_dec_places(diff, decimal_places);
+
+    if ( diff_trunc != 0 )
+    {
+        UnityTestResultsFailBegin(lineNumber);
+        UNITY_PRINT_EXPECTED_AND_ACTUAL_FLOAT((UNITY_DOUBLE)expected, (UNITY_DOUBLE)actual);
+        UnityAddMsgIfSpecified(msg);
+        UNITY_FAIL_AND_BAIL;
+    }
+}
+
 /*-----------------------------------------------*/
 void UnityAssertFloatsNotWithin(const UNITY_FLOAT delta,
                                 const UNITY_FLOAT expected,

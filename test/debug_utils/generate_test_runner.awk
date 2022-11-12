@@ -19,7 +19,7 @@ END {
 
 	
 	print "int main(void)\n{" ;
-	print "    setvbuf(stdout, NULL, _IONBF, 0);";
+	print "    setvbuf(stdout, NULL, _IOLBF, 0);		// set line buffering";
 	print "    UnityBegin(\"" FILENAME "\");" ;
 	print "";
 	

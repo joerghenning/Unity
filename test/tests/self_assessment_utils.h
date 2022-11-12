@@ -31,7 +31,8 @@ static const UNITY_DOUBLE d_zero = 0.0;
       UnityPrint(Unity.CurrentTestName);                                       \
       UnityPrint(":FAIL: [[[[ Test Should Have Failed But Did Not ]]]]");      \
       UNITY_OUTPUT_CHAR('\n');                                                 \
-    }
+    }                                                                          \
+	UNITY_PRINT_EOL();
 
 #define VERIFY_IGNORES_END                                                     \
     }                                                                          \

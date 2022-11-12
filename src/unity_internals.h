@@ -676,6 +676,12 @@ void UnityAssertAlmostEqualFloats(const UNITY_FLOAT expected,
                                   const char* msg,
                                   const UNITY_LINE_TYPE lineNumber);
 
+void UnityAssertAlmostEqualFloats_2(const UNITY_FLOAT expected,
+                                    const UNITY_FLOAT actual,
+                                    const UNITY_FLOAT decimal_places,
+                                    const char* msg,
+                                    const UNITY_LINE_TYPE lineNumber);
+
 void UnityAssertFloatsNotWithin(const UNITY_FLOAT delta,
                                 const UNITY_FLOAT expected,
                                 const UNITY_FLOAT actual,
@@ -1070,6 +1076,7 @@ int UnityTestMatches(void);
 #define UNITY_TEST_ASSERT_NOT_EQUAL_FLOAT(expected, actual, line, message)                       UNITY_TEST_ASSERT_FLOAT_NOT_WITHIN((UNITY_FLOAT)(expected) * (UNITY_FLOAT)UNITY_FLOAT_PRECISION, (UNITY_FLOAT)(expected), (UNITY_FLOAT)(actual), (UNITY_LINE_TYPE)(line), (message))
 
 #define UNITY_TEST_ASSERT_ALMOST_EQUAL_FLOAT(expected, actual, decimal_places, line, message)    UnityAssertAlmostEqualFloats((UNITY_FLOAT)(expected), (UNITY_FLOAT)(actual), (UNITY_FLOAT)(decimal_places), (message), (UNITY_LINE_TYPE)(line))
+#define UNITY_TEST_ASSERT_ALMOST_EQUAL_FLOAT_2(expected, actual, decimal_places, line, message)  UnityAssertAlmostEqualFloats_2((UNITY_FLOAT)(expected), (UNITY_FLOAT)(actual), (UNITY_FLOAT)(decimal_places), (message), (UNITY_LINE_TYPE)(line))
 
 #define UNITY_TEST_ASSERT_EQUAL_FLOAT_ARRAY(expected, actual, num_elements, line, message)       UnityAssertEqualFloatArray((UNITY_FLOAT*)(expected), (UNITY_FLOAT*)(actual), (UNITY_UINT32)(num_elements), (message), (UNITY_LINE_TYPE)(line), UNITY_ARRAY_TO_ARRAY)
 #define UNITY_TEST_ASSERT_EACH_EQUAL_FLOAT(expected, actual, num_elements, line, message)        UnityAssertEqualFloatArray(UnityFloatToPtr(expected), (UNITY_FLOAT*)(actual), (UNITY_UINT32)(num_elements), (message), (UNITY_LINE_TYPE)(line), UNITY_ARRAY_TO_VAL)
