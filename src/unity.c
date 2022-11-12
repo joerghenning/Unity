@@ -1000,6 +1000,62 @@ void UnityAssertFloatsWithin(const UNITY_FLOAT delta,
     }
 }
 
+static UNITY_FLOAT trunc_dec_places(UNITY_FLOAT val, UNITY_FLOAT dec_places) {
+
+	return trunc( val * pow(10, dec_places) ) / pow(10, dec_places );
+}
+
+//static int __debug_UnityFloatsWithin(UNITY_FLOAT delta, UNITY_FLOAT expected, UNITY_FLOAT actual)
+//{
+//    UNITY_FLOAT diff;
+//
+//    if (isinf(expected) && isinf(actual) && (((expected) < 0) == ((actual) < 0)))
+//        return 1;
+//    if (UNITY_NAN_CHECK)
+//        return 1;
+//
+//    (diff) = (actual) - (expected);
+//
+//    if ((diff) < 0)
+//        (diff) = -(diff);
+//    if ((delta) < 0)
+//        (delta) = -(delta);
+//
+//    int tf;
+//    tf = ((diff) > (delta));
+//
+//    return !(isnan(diff) || isinf(diff) || tf);
+//
+//}
+
+/*-----------------------------------------------*/
+void UnityAssertAlmostEqualFloats(const UNITY_FLOAT expected,
+                                  const UNITY_FLOAT actual,
+                                  const UNITY_FLOAT decimal_places,
+                                  const char* msg,
+                                  const UNITY_LINE_TYPE lineNumber)
+{
+    RETURN_IF_FAIL_OR_IGNORE;
+
+    UNITY_FLOAT expected_trunc = trunc_dec_places(expected, decimal_places);
+    UNITY_FLOAT actual_trunc   = trunc_dec_places(actual  , decimal_places);
+
+    //UNITY_FLOAT delta = (UNITY_FLOAT)(expected) * (UNITY_FLOAT)UNITY_FLOAT_PRECISION;
+
+    int retVal;
+
+    //retVal = __debug_UnityFloatsWithin(delta, expected_trunc, actual_trunc);
+    retVal = UnityFloatsWithin(0, expected_trunc, actual_trunc);
+
+    if ( !retVal )
+    {
+        UnityTestResultsFailBegin(lineNumber);
+        UNITY_PRINT_EXPECTED_AND_ACTUAL_FLOAT((UNITY_DOUBLE)expected, (UNITY_DOUBLE)actual);
+        UnityAddMsgIfSpecified(msg);
+        UNITY_FAIL_AND_BAIL;
+    }
+}
+
 /*-----------------------------------------------*/
 void UnityAssertFloatsNotWithin(const UNITY_FLOAT delta,
                                 const UNITY_FLOAT expected,
@@ -2003,6 +2059,7 @@ void UnityIgnore(const char* msg, const UNITY_LINE_TYPE line)
         UNITY_OUTPUT_CHAR(':');
         UNITY_OUTPUT_CHAR(' ');
         UnityPrint(msg);
+        UNITY_PRINT_EOL();
     }
     UNITY_IGNORE_AND_BAIL;
 }
