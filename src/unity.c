@@ -1037,33 +1037,6 @@ void UnityAssertAlmostEqualFloats(const UNITY_FLOAT expected,
 {
     RETURN_IF_FAIL_OR_IGNORE;
 
-    UNITY_FLOAT expected_trunc = trunc_dec_places(expected, decimal_places);
-    UNITY_FLOAT actual_trunc   = trunc_dec_places(actual  , decimal_places);
-
-    //UNITY_FLOAT delta = (UNITY_FLOAT)(expected) * (UNITY_FLOAT)UNITY_FLOAT_PRECISION;
-
-    int retVal;
-
-    //retVal = __debug_UnityFloatsWithin(delta, expected_trunc, actual_trunc);
-    retVal = UnityFloatsWithin(0, expected_trunc, actual_trunc);
-
-    if ( !retVal )
-    {
-        UnityTestResultsFailBegin(lineNumber);
-        UNITY_PRINT_EXPECTED_AND_ACTUAL_FLOAT((UNITY_DOUBLE)expected, (UNITY_DOUBLE)actual);
-        UnityAddMsgIfSpecified(msg);
-        UNITY_FAIL_AND_BAIL;
-    }
-}
-
-void UnityAssertAlmostEqualFloats_2(const UNITY_FLOAT expected,
-                                   const UNITY_FLOAT actual,
-                                   const UNITY_FLOAT decimal_places,
-                                   const char* msg,
-                                   const UNITY_LINE_TYPE lineNumber)
-{
-    RETURN_IF_FAIL_OR_IGNORE;
-
     UNITY_FLOAT diff;
     UNITY_FLOAT diff_trunc;
 

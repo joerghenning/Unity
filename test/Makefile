@@ -4,6 +4,8 @@ MY_DEBUG_TESTRUNNER = true
 
 
 CC = gcc
+GCC = gcc
+
 ifeq ($(shell uname -s), Darwin)
 CC = clang
 endif
@@ -28,6 +30,8 @@ UNITY_INCLUDE_DOUBLE = -D UNITY_INCLUDE_DOUBLE
 #DEFINES += -D UNITY_OUTPUT_FLUSH=flushSpy
 #DEFINES += -D UNITY_OUTPUT_FLUSH_HEADER_DECLARATION=flushSpy\(void\)
 
+LDFLAGS = -lm
+
 
 DEFINES += -D UNITY_USE_FLUSH_STDOUT
 
@@ -46,7 +50,8 @@ BUILD_DIR = build
 #TARGET = build/testunity-cov.exe
 TARGET = build/my_testunity.exe
 
-
+# My CC command with cflags and ldflags
+MY_CC = $(GCC) $(CFLAGS) $(LDFLAGS)
 
 TARGET_ARRAYS      = test_unity_arrays.exe
 TARGET_CORE        = test_unity_core.exe
@@ -60,25 +65,28 @@ TARGET_STRINGS     = test_unity_strings.exe
 # To generate coverage, call 'make -s', the default target runs.
 # For verbose output of all the tests, run 'make test'.
 default: test
-.PHONY: default test clean
+.PHONY: default clean
 
 test_unity_core: $(SRC2)
-	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC2) -o $(BUILD_DIR)/$(TARGET_CORE)
+	@echo "[JH] $@"
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC2) -o $(BUILD_DIR)/$(TARGET_CORE) $(LDFLAGS)
 
 test_unity_floats: $(SRC4)
-	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC4) -o $(BUILD_DIR)/$(TARGET_FLOATS)
+	@echo "[JH] $@"
+#	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC4) -o $(BUILD_DIR)/$(TARGET_FLOATS)
+	$(MY_CC) $(DEFINES) $(INC_DIR) $(SRC4) -o $(BUILD_DIR)/$(TARGET_FLOATS) $(LDFLAGS)
 
 #test: $(SRC1) $(SRC2) $(SRC3) $(SRC4) $(SRC5) $(SRC6) $(SRC7) $(SRC8)
-test: $(SRC2) $(SRC4)
+test: test_unity_core test_unity_floats
 	@echo [Target test]
 #	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC1) -o $(TARGET)
 #	./$(TARGET)
-	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC2) -o $(TARGET_CORE)
+#	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC2) -o $(TARGET_CORE) $(LDFLAGS)
 #	./$(TARGET)
 #	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC3) -o $(TARGET)
 #	./$(TARGET)
 
-	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC4) -o $(TARGET_FLOATS)
+#s	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC4) -o $(TARGET_FLOATS) $(LDFLAGS)
 	
 	
 #	./$(TARGET)
@@ -139,10 +147,9 @@ $(BUILD_DIR):
 	mkdir -p $(BUILD_DIR)
 
 clean:
-	pwd
 	rm -f $(BUILD_DIR)/*.exe $(BUILD_DIR)/*.gc* $(BUILD_DIR)/test_unity_*Runner.c
 	
-.Phony: my_sub
+.Phony: my_sub debug
 
 my_sub:
 	echo $(SRC4)
@@ -150,4 +157,8 @@ my_sub:
 	echo "2:" $(word 2, $(SRC4))
 	echo "THIS_TEST_EXE:" $(subst tests/,,$(word 2, $(SRC4)))
 	echo $(patsubst %.c, %.exe, $(subst tests/,,$(word 2, $(SRC4))))  
+	
+
+debug:
+	@echo "[JH] $@"	
 	
