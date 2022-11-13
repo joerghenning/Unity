@@ -36,14 +36,14 @@ LDFLAGS = -lm
 DEFINES += -D UNITY_USE_FLUSH_STDOUT
 
 DEFINES += $(UNITY_SUPPORT_64) $(UNITY_INCLUDE_DOUBLE)
-#SRC1 = ../src/unity.c tests/test_unity_arrays.c build/test_unity_arraysRunner.c
+SRC1 = ../src/unity.c tests/test_unity_arrays.c build/test_unity_arraysRunner.c
 SRC2 = ../src/unity.c tests/test_unity_core.c build/test_unity_coreRunner.c
-#SRC3 = ../src/unity.c tests/test_unity_doubles.c build/test_unity_doublesRunner.c
+SRC3 = ../src/unity.c tests/test_unity_doubles.c build/test_unity_doublesRunner.c
 SRC4 = ../src/unity.c tests/test_unity_floats.c build/test_unity_floatsRunner.c
-#SRC5 = ../src/unity.c tests/test_unity_integers.c build/test_unity_integersRunner.c
-#SRC6 = ../src/unity.c tests/test_unity_integers_64.c build/test_unity_integers_64Runner.c
-#SRC7 = ../src/unity.c tests/test_unity_memory.c build/test_unity_memoryRunner.c
-#SRC8 = ../src/unity.c tests/test_unity_strings.c build/test_unity_stringsRunner.c
+SRC5 = ../src/unity.c tests/test_unity_integers.c build/test_unity_integersRunner.c
+SRC6 = ../src/unity.c tests/test_unity_integers_64.c build/test_unity_integers_64Runner.c
+SRC7 = ../src/unity.c tests/test_unity_memory.c build/test_unity_memoryRunner.c
+SRC8 = ../src/unity.c tests/test_unity_strings.c build/test_unity_stringsRunner.c
 INC_DIR = -I ../src
 COV_FLAGS = -fprofile-arcs -ftest-coverage -I ../../src
 BUILD_DIR = build
@@ -64,8 +64,10 @@ TARGET_STRINGS     = test_unity_strings.exe
 
 # To generate coverage, call 'make -s', the default target runs.
 # For verbose output of all the tests, run 'make test'.
-default: test
+default: test_small
 .PHONY: default clean
+
+test_small: test_unity_core test_unity_floats
 
 test_unity_core: $(SRC2)
 	@echo "[JH] $@"
@@ -73,63 +75,57 @@ test_unity_core: $(SRC2)
 
 test_unity_floats: $(SRC4)
 	@echo "[JH] $@"
-#	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC4) -o $(BUILD_DIR)/$(TARGET_FLOATS)
-	$(MY_CC) $(DEFINES) $(INC_DIR) $(SRC4) -o $(BUILD_DIR)/$(TARGET_FLOATS) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC4) -o $(BUILD_DIR)/$(TARGET_FLOATS) $(LDFLAGS)
 
-#test: $(SRC1) $(SRC2) $(SRC3) $(SRC4) $(SRC5) $(SRC6) $(SRC7) $(SRC8)
-test: test_unity_core test_unity_floats
+test: $(SRC1) $(SRC2) $(SRC3) $(SRC4) $(SRC5) $(SRC6) $(SRC7) $(SRC8)
 	@echo [Target test]
-#	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC1) -o $(TARGET)
-#	./$(TARGET)
-#	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC2) -o $(TARGET_CORE) $(LDFLAGS)
-#	./$(TARGET)
-#	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC3) -o $(TARGET)
-#	./$(TARGET)
-
-#s	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC4) -o $(TARGET_FLOATS) $(LDFLAGS)
-	
-	
-#	./$(TARGET)
-#	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC5) -o $(TARGET)
-#	./$(TARGET)
-#	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC6) -o $(TARGET)
-#	./$(TARGET)
-#	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC7) -o $(TARGET)
-#	./$(TARGET)
-#	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC8) -o $(TARGET)
-#	./$(TARGET)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC1) -o $(TARGET)
+	./$(TARGET)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC2) -o $(TARGET)
+	./$(TARGET)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC3) -o $(TARGET)
+	./$(TARGET)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC4) -o $(TARGET) $(LDFLAGS)
+	./$(TARGET)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC5) -o $(TARGET)
+	./$(TARGET)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC6) -o $(TARGET)
+	./$(TARGET)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC7) -o $(TARGET)
+	./$(TARGET)
+	$(CC) $(CFLAGS) $(DEFINES) $(INC_DIR) $(SRC8) -o $(TARGET)
+	./$(TARGET)
 
 # Compile only, for testing that preprocessor detection works
 #UNITY_C_ONLY =-c ../src/unity.c -o $(BUILD_DIR)/unity.o
-#intDetection:
-#	@echo [intDetection]
-#	$(CC) $(CFLAGS) $(INC_DIR) $(UNITY_C_ONLY) -D UNITY_EXCLUDE_STDINT_H
-#	$(CC) $(CFLAGS) $(INC_DIR) $(UNITY_C_ONLY) -D UNITY_EXCLUDE_LIMITS_H
+intDetection:
+	@echo [intDetection]
+	$(CC) $(CFLAGS) $(INC_DIR) $(UNITY_C_ONLY) -D UNITY_EXCLUDE_STDINT_H
+	$(CC) $(CFLAGS) $(INC_DIR) $(UNITY_C_ONLY) -D UNITY_EXCLUDE_LIMITS_H
 
-#$(BUILD_DIR)/test_unity_arraysRunner.c: tests/test_unity_arrays.c | $(BUILD_DIR)
-#	@echo [$(BUILD_DIR)/test_unity_arraysRunner.c]
-#	awk $(AWK_SCRIPT) tests/test_unity_arrays.c > $@
-#
+$(BUILD_DIR)/test_unity_arraysRunner.c: tests/test_unity_arrays.c | $(BUILD_DIR)
+	awk $(AWK_SCRIPT) tests/test_unity_arrays.c > $@
+
 $(BUILD_DIR)/test_unity_coreRunner.c: tests/test_unity_core.c | $(BUILD_DIR)
 	awk $(AWK_SCRIPT) tests/test_unity_core.c > $@
 
-#$(BUILD_DIR)/test_unity_doublesRunner.c: tests/test_unity_doubles.c | $(BUILD_DIR)
-#	awk $(AWK_SCRIPT) tests/test_unity_doubles.c > $@
-#
+$(BUILD_DIR)/test_unity_doublesRunner.c: tests/test_unity_doubles.c | $(BUILD_DIR)
+	awk $(AWK_SCRIPT) tests/test_unity_doubles.c > $@
+
 $(BUILD_DIR)/test_unity_floatsRunner.c: tests/test_unity_floats.c | $(BUILD_DIR)
 	awk $(AWK_SCRIPT) tests/test_unity_floats.c > $@
-#
-#$(BUILD_DIR)/test_unity_integersRunner.c: tests/test_unity_integers.c | $(BUILD_DIR)
-#	awk $(AWK_SCRIPT) tests/test_unity_integers.c > $@
-#
-#$(BUILD_DIR)/test_unity_integers_64Runner.c: tests/test_unity_integers_64.c | $(BUILD_DIR)
-#	awk $(AWK_SCRIPT) tests/test_unity_integers_64.c > $@
-#
-#$(BUILD_DIR)/test_unity_memoryRunner.c: tests/test_unity_memory.c | $(BUILD_DIR)
-#	awk $(AWK_SCRIPT) tests/test_unity_memory.c > $@
-#
-#$(BUILD_DIR)/test_unity_stringsRunner.c: tests/test_unity_strings.c | $(BUILD_DIR)
-#	awk $(AWK_SCRIPT) tests/test_unity_strings.c > $@
+
+$(BUILD_DIR)/test_unity_integersRunner.c: tests/test_unity_integers.c | $(BUILD_DIR)
+	awk $(AWK_SCRIPT) tests/test_unity_integers.c > $@
+
+$(BUILD_DIR)/test_unity_integers_64Runner.c: tests/test_unity_integers_64.c | $(BUILD_DIR)
+	awk $(AWK_SCRIPT) tests/test_unity_integers_64.c > $@
+
+$(BUILD_DIR)/test_unity_memoryRunner.c: tests/test_unity_memory.c | $(BUILD_DIR)
+	awk $(AWK_SCRIPT) tests/test_unity_memory.c > $@
+
+$(BUILD_DIR)/test_unity_stringsRunner.c: tests/test_unity_strings.c | $(BUILD_DIR)
+	awk $(AWK_SCRIPT) tests/test_unity_strings.c > $@
 
 ifdef MY_DEBUG_TESTRUNNER
 AWK_SCRIPT=-f debug_utils/generate_test_runner.awk
